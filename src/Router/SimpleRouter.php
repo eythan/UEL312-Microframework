@@ -40,8 +40,38 @@ class SimpleRouter implements Router {
     }
 
     public function serve(mixed ...$args): void {
-	    // TODO
+        // Recuperation de la requête HTTP
+        $request = Request::createFromGlobals();
+
+        // Recuperation de l'url demandé
+        $path = rtrim($request->getPathInfo(), '/') ?: '/';
+
+        $matched = null;
+        $matches = [];
+
+        // Boucle dans un tableau de route pour trouvé le correspondant
+        foreach ($this->routes as $item) {
+            if (preg_match($item['regex'], $path, $matches)) {
+                $matched = $item['route'];
+                break;
+            }
+        }
+
+        // Si aucune route -> Erreur 404
+        if (!$matched) {
+            $response = new Response("404 Not Found", Response::HTTP_NOT_FOUND);
+            $response->send();
+            return;
+        }
+
+        // Récupération des parametre de l'URL
+        foreach ($matches as $key => $value) {
+            if (!is_numeric($key)) {
+                $request->attributes->set($key, $value);
+            }
+        }
+
+        $response = $matched->call($request, $this->engine);
+        $response->send();
     }
 }
-
-?>
