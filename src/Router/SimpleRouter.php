@@ -5,6 +5,7 @@ namespace Framework312\Router;
 use Framework312\Router\Exception as RouterException;
 use Framework312\Template\Renderer;
 use Symfony\Component\HttpFoundation\Response;
+use Framework312\Router\View\TemplateView;
 
 class Route {
     private const VIEW_CLASS = 'Framework312\Router\View\BaseView';
@@ -23,20 +24,35 @@ class Route {
     }
 
     public function call(Request $request, ?Renderer $engine): Response {
-	    // TODO
+        $viewClass = $this->view;
+
+        // Instanciation et transmission au moteur de template
+        if (is_subclass_of($viewClass, TemplateView::class) && $engine !== null) {
+            $view = new $viewClass($engine);
+        } else {
+            $view = new $viewClass();
+        }
+
+        return $view->render($request);
     }
 }
 
 class SimpleRouter implements Router {
     private Renderer $engine;
+    private array $routes = [];
 
     public function __construct(Renderer $engine) {
         $this->engine = $engine;
-        // TODO
     }
 
     public function register(string $path, string|object $class_or_view) {
-	    // TODO
+        // Transforme les variables en regex pour lire leur valeur
+        $regex = preg_replace('#:([a-zA-Z0-9_]+)#', '(?P<$1>[^/]+)', $path);
+
+        $this->routes[] = [
+            'regex' => '#^' . $regex . '$#',
+            'route' => new Route($class_or_view),
+        ];
     }
 
     public function serve(mixed ...$args): void {
