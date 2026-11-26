@@ -12,7 +12,7 @@ final class JSONViewTest extends TestCase
     {
         $this->assertFalse(JSONView::use_template());
     }
-
+    // Teste que render() appelle la méthode correspondant au verbe HTTP, encode les données en JSON et renvoie le JSON
     public function testRender1(): void
     {
         $_SERVER['REQUEST_METHOD'] = 'GET';
@@ -29,7 +29,7 @@ final class JSONViewTest extends TestCase
         $this->assertSame('{"message":"Test"}', $response->getContent());
         $this->assertStringContainsString('application/json', $response->headers->get('content-type'));
     }
-
+    // Teste que render() lance une exception si le résultat de la méthode n'est pas du JSON
     public function testRender2(): void
     {
         $_SERVER['REQUEST_METHOD'] = 'POST';

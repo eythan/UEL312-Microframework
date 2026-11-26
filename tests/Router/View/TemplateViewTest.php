@@ -9,7 +9,7 @@ use Framework312\Template\Renderer;
 
 final class TemplateViewTest extends TestCase
 {
-    // ---------- __construct() ----------
+
     // Vérifie que le constructeur enregistre la view auprès du renderer
     public function testConstructeur1(): void
     {
@@ -30,14 +30,13 @@ final class TemplateViewTest extends TestCase
         new class('pas un renderer') extends TemplateView {};
     }
 
-    // ---------- use_template() ----------
 
     public function testUseTemplateRenvoieTrue(): void
     {
         $this->assertTrue(TemplateView::use_template());
     }
 
-    // ---------- render() ----------
+    
     // Teste que render() appelle la méthode correspondant au verbe HTTP, passe les données au renderer et renvoie le HTML
     public function testRender1(): void
     {

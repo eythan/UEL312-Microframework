@@ -11,8 +11,8 @@ final class TwigRendererTest extends TestCase
     private string $dossier;
 
     // Avant chaque test : un dossier de templates
-    //   templates/accueil.twig
-    //   templates/Book/show.twig
+    // templates/accueil.twig
+    // templates/Book/show.twig
     protected function setUp(): void
     {
         $this->dossier = sys_get_temp_dir() . '/twig_test_' . uniqid();
@@ -31,7 +31,7 @@ final class TwigRendererTest extends TestCase
     }
 
 
-    
+
     // Teste que le constructeur crée bien un TwigRenderer avec un dossier existant
     public function testConstructeur1(): void
     {
