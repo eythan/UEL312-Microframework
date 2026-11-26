@@ -30,7 +30,8 @@ final class TwigRendererTest extends TestCase
         rmdir($this->dossier);
     }
 
-    // ---------- __construct() ----------
+
+    
     // Teste que le constructeur crée bien un TwigRenderer avec un dossier existant
     public function testConstructeur1(): void
     {
@@ -46,7 +47,8 @@ final class TwigRendererTest extends TestCase
         new TwigRenderer($this->dossier . '/inexistant');
     }
 
-    // ---------- render() ----------
+
+
     // Vérifie que render() remplit correctement le template avec les données fournies
     public function testRender1(): void
     {
@@ -66,7 +68,8 @@ final class TwigRendererTest extends TestCase
         $renderer->render([], 'inexistant.twig');
     }
 
-    // ---------- register() ----------
+
+
     // Vérifie que register() rend les templates du sous-dossier accessibles
     public function testRegister1(): void
     {

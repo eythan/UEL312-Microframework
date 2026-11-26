@@ -15,6 +15,7 @@ final class SimpleRouterTest extends TestCase
 {
     private SimpleRouter $router;
 
+    
     //------- Préparation -------
 
     // Exécutée avant chaque test : un router et une requête par défaut
@@ -45,7 +46,9 @@ final class SimpleRouterTest extends TestCase
         };
     }
 
+
     //------- Test -------
+
     // Test le comportement de register() lorsque la classe n'hérite pas de BaseView
     public function testRegister1(): void
     {

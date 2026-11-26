@@ -8,6 +8,8 @@ use PHPUnit\Framework\TestCase;
 use Framework312\Router\Exception\InvalidViewImplementation;
 use Framework312\Router\Route;
 use Framework312\Router\View\HTMLView;
+use Framework312\Router\View\TemplateView;
+use \Framework312\Template\Renderer;
 
 
 class_exists(SimpleRouter::class);
@@ -63,26 +65,25 @@ final class RouteTest extends TestCase
         };
 
         $route = new Route($view);
-        $engine = $this->createMock(\Framework312\Template\Renderer::class);
+        $engine = $this->createMock(Renderer::class);
         $response = $route->call(new Request(), $engine);
 
         $this->assertSame(200, $response->getStatusCode());
         $this->assertSame('<h1>Test</h1>', $response->getContent());
         $this->assertNull($view::$engineRecu);
     }
-    /*
     // Test le comportement de call() lorsque la View utilise un engine (renderer)
     public function testCall2(): void
     {
         $_SERVER['REQUEST_METHOD'] = 'GET';
 
-        $engine = $this->createMock(\Framework312\Template\Renderer::class);
+        $engine = $this->createMock(Renderer::class);
         $engine->method('render')->willReturn('<h1>Test</h1>');
 
         $view = new class($engine) extends TemplateView {
             public static mixed $engineRecu = null;
 
-            public function __construct(\Framework312\Template\Renderer $engine)
+            public function __construct(Renderer $engine)
             {
                 parent::__construct($engine);
                 self::$engineRecu = $engine;
@@ -103,5 +104,4 @@ final class RouteTest extends TestCase
         $this->assertSame('<h1>Test</h1>', $response->getContent());
         $this->assertSame($engine, $view::$engineRecu);
     }
-    */
 }
