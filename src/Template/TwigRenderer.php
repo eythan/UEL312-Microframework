@@ -1,4 +1,6 @@
 <?php
+namespace Framework312\Template;
+
 use Framework312\Template\Renderer;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;  
