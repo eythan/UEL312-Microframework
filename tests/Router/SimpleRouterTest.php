@@ -88,4 +88,28 @@ final class SimpleRouterTest extends TestCase
         $this->expectOutputString('404 Not Found');
         $this->router->serve();
     }
+
+    // Test que Serve() renvoie une réponse 405 si la View n'implémente pas le verbe demandé
+    public function testServe4(): void
+    {
+        $this->router->register('/book/:id', $this->viewLivre());   // n'implémente que get()
+        $this->simulerRequete('POST', '/book/42');
+
+        $this->expectOutputRegex('/^Method POST not implemented/');
+        $this->router->serve();
+    }
+    // Test que Serve() renvoie une réponse 500 si la View plante
+    public function testServe5(): void
+    {
+        $this->router->register('/bug', new class extends HTMLView {
+            protected function get(Request $request): string
+            {
+                throw new \RuntimeException('bug dans la View');
+            }
+        });
+        $this->simulerRequete('GET', '/bug');
+
+        $this->expectOutputString('500 Internal Server Error');
+        $this->router->serve();
+    }
 }

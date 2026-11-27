@@ -7,6 +7,8 @@ use Framework312\Router\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 abstract class BaseView {
+    protected const VERBES_AUTORISES = ['get', 'post', 'put', 'patch', 'delete'];
+
     protected function get(Request $request): mixed {
         throw new RouterException\HttpMethodNotImplemented(static::class, 'GET');
     }

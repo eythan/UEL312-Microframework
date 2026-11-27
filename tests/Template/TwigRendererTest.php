@@ -19,6 +19,7 @@ final class TwigRendererTest extends TestCase
         mkdir($this->dossier . '/Book', 0777, true);
         file_put_contents($this->dossier . '/accueil.twig', 'Bonjour {{ nom }}');
         file_put_contents($this->dossier . '/Book/show.twig', 'Livre {{ titre }}');
+        file_put_contents($this->dossier . '/show.twig', 'Global {{ titre }}');
     }
 
     // Après chaque test : on supprime le dossier de templates
@@ -26,6 +27,7 @@ final class TwigRendererTest extends TestCase
     {
         unlink($this->dossier . '/Book/show.twig');
         unlink($this->dossier . '/accueil.twig');
+        unlink($this->dossier . '/show.twig');
         rmdir($this->dossier . '/Book');
         rmdir($this->dossier);
     }
@@ -76,6 +78,18 @@ final class TwigRendererTest extends TestCase
         $renderer = new TwigRenderer($this->dossier);
 
         $renderer->register('Book');
+
+        // avec l'alias
+        $this->assertSame('Livre Dune', $renderer->render(['titre' => 'Dune'], '@Book/show.twig'));
+        // sans l'alias : show.twig est cherché d'abord dans le sous-dossier Book/
+        $this->assertSame('Livre Dune', $renderer->render(['titre' => 'Dune'], 'show.twig'));
+    }
+    // Vérifie que register() n'utilise que le nom court d'une classe avec namespace
+    public function testRegister3(): void
+    {
+        $renderer = new TwigRenderer($this->dossier);
+
+        $renderer->register('App\\Views\\Book');   // static::class d'une View rangée dans un namespace
 
         $this->assertSame('Livre Dune', $renderer->render(['titre' => 'Dune'], '@Book/show.twig'));
     }

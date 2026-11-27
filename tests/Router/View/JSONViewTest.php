@@ -4,6 +4,7 @@ namespace Framework312\Tests\Router\View;
 
 use Framework312\Router\Request;
 use Framework312\Router\View\JSONView;
+use Framework312\Router\Exception\HttpMethodNotImplemented;
 use PHPUnit\Framework\TestCase;
 
 final class JSONViewTest extends TestCase
@@ -41,6 +42,19 @@ final class JSONViewTest extends TestCase
         };
 
         $this->expectException(\TypeError::class);
+
+        $view->render(new Request());
+    }
+
+    // Teste que render() refuse un verbe non prévu (ex : HEAD) au lieu d'appeler une méthode inexistante
+    public function testRenderVerbeNonAutorise(): void
+    {
+        $_SERVER['REQUEST_METHOD'] = 'HEAD';
+
+        $view = new class extends JSONView {};
+
+        $this->expectException(HttpMethodNotImplemented::class);
+        $this->expectExceptionCode(405);
 
         $view->render(new Request());
     }

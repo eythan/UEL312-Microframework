@@ -23,7 +23,7 @@ class Request extends SymfonyRequest {
         if (func_num_args() > 0) {
             $args = array_filter($args, 'is_string');
         }
-        $this->context = array_map('strtolower', $args);
+        $this->context = array_change_key_case($args, CASE_LOWER);
     }
 
     public function fromContext(string $key): mixed {

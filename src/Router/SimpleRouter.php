@@ -5,7 +5,6 @@ namespace Framework312\Router;
 use Framework312\Router\Exception as RouterException;
 use Framework312\Template\Renderer;
 use Symfony\Component\HttpFoundation\Response;
-use Framework312\Router\View\TemplateView;
 
 class Route {
     private const VIEW_CLASS = 'Framework312\Router\View\BaseView';
@@ -26,8 +25,8 @@ class Route {
     public function call(Request $request, ?Renderer $engine): Response {
         $viewClass = $this->view;
 
-        // Instanciation et transmission au moteur de template
-        if (is_subclass_of($viewClass, TemplateView::class) && $engine !== null) {
+        // Instanciation : seule une View qui utilise un template reçoit le moteur
+        if ($viewClass::use_template()) {
             $view = new $viewClass($engine);
         } else {
             $view = new $viewClass();
@@ -87,7 +86,14 @@ class SimpleRouter implements Router {
             }
         }
 
-        $response = $matched->call($request, $this->engine);
+        // Appel de la View : les erreurs sont transformées en réponse HTTP
+        try {
+            $response = $matched->call($request, $this->engine);
+        } catch (RouterException\HttpMethodNotImplemented $e) {
+            $response = new Response($e->getMessage(), $e->getCode());
+        } catch (\Throwable $e) {
+            $response = new Response('500 Internal Server Error', Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
         $response->send();
     }
 }

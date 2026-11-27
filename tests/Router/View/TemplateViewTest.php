@@ -4,6 +4,7 @@ namespace Framework312\Tests\Router\View;
 
 use Framework312\Router\Request;
 use Framework312\Router\View\TemplateView;
+use Framework312\Router\Exception\HttpMethodNotImplemented;
 use PHPUnit\Framework\TestCase;
 use Framework312\Template\Renderer;
 
@@ -91,6 +92,19 @@ final class TemplateViewTest extends TestCase
         };
 
         $this->expectException(\InvalidArgumentException::class);
+
+        $view->render(new Request());
+    }
+
+    // Teste que render() refuse un verbe non prévu (ex : HEAD) au lieu d'appeler une méthode inexistante
+    public function testRenderVerbeNonAutorise(): void
+    {
+        $_SERVER['REQUEST_METHOD'] = 'HEAD';
+
+        $view = new class($this->createMock(Renderer::class)) extends TemplateView {};
+
+        $this->expectException(HttpMethodNotImplemented::class);
+        $this->expectExceptionCode(405);
 
         $view->render(new Request());
     }
