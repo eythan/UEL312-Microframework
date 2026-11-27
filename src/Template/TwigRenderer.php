@@ -1,7 +1,10 @@
 <?php
+namespace Framework312\Template;
+
 use Framework312\Template\Renderer;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;  
+
 class TwigRenderer implements Renderer {
     private $loader;
     private $twig;
@@ -16,6 +19,7 @@ class TwigRenderer implements Renderer {
         return $this->twig->render($template, $data);
     }
     public function register(string $tag) : void {
+        $this->loader->prependPath($this->mainPath);
         $this->loader->addPath($this->mainPath.'/'.$tag, $tag);
     }
 }
