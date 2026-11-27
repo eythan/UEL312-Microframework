@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head><meta charset="utf-8"><title>Livre {{ id }}</title></head>
+<body>
+  {% if livre %}
+    <h1>{{ livre.titre }}</h1>
+    <p>Auteur : {{ livre.auteur }}</p>
+  {% else %}
+    <h1>Livre {{ id }} introuvable</h1>
+  {% endif %}
+
+  <form method="post">
+    <input name="note" placeholder="Ta note sur 20">
+    <button>Envoyer (POST)</button>
+  </form>
+  <p><a href="/">Retour</a></p>
+</body>
+</html>
