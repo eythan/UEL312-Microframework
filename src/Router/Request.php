@@ -16,7 +16,7 @@ class Request extends SymfonyRequest {
         $is_urlencoded = str_starts_with($content_type, 'application/x-www-form-urlencoded');
         $modification_methods = ['PUT', 'DELETE', 'PATCH'];
         if ($is_urlencoded && \in_array($method, $modification_methods, true)) {
-            parent::parse_str($this->getContent(), $data);
+            parse_str($this->getContent(), $data);
             $this->request = new InputBag($data);
         }
 
