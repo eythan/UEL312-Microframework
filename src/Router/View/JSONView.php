@@ -20,7 +20,7 @@ abstract class JSONView extends BaseView {
 
         // On vérifie si JSONFormat est un string, comme Reponse demande un retour en string
         if(!is_string($JSONFormat)) {
-            throw new TypeError;
+            throw new TypeError("Le contenu JSON doit être de type string");
         } else {
             $response = new Response($JSONFormat, 200, ['content-type' => 'application/json']);
             return $response;
